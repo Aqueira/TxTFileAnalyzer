@@ -1,0 +1,27 @@
+[package]
+name = "testik"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.37.0", features = ["full"] }
+log = "0.4.21"
+reqwest = "0.12.4"
+hyper = "1.3.1"
+aqueiralibrary = "0.1.1"
+thiserror = "1.0.61"
+libp2p = "0.53.2"
+serde_json = { version = "1.0.117", features = ["default"] }
+sha2 = "0.10.1"
+chronic = "0.1.2"
+hex = "0.4.3"
+once_cell = "1.19.0"
+env_logger = "0.11.3"
+serde = { version = "1.0.203", features = ["derive"] }
+rust-crypto = "0.2.36"
+bincode = "1.3.1"
+failure = "0.1.8"
+sled = "1.0.0-alpha.121"
+clap = "4.5.4"
+bitcoincash-addr = "0.5.2"
+merkle-cbt = "0.3.2"
