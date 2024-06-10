@@ -1,6 +1,4 @@
-mod custom_errors;
-
-use custom_errors::Error;
+use anyhow::Result;
 use std::env::args;
 use std::fs;
 use std::path::Path;
@@ -32,41 +30,40 @@ enum Commands {
     Empty,
 }
 
-fn main() -> Result<(), Error> {
+fn main() -> Result<()> {
     let mut args = get_args()?;
     let path = get_path(&mut args)?;
-    let command = parse_args_to_command(args);
-    let file_information = get_all_information(&path)
-        .map(|tuple| FileInformation::from(tuple))?;
+    let command = parse_args_to_command(&args);
+    let file_information = get_all_information(&path).map(|tuple| FileInformation::from(tuple))?;
     print_command_result(&command, &file_information);
     Ok(())
 }
 
-fn get_args() -> Result<Vec<String>, Error> {
+fn get_args() -> Result<Vec<String>> {
     let args: Vec<String> = args().skip(1).collect();
     args_is_empty(&args)?;
     Ok(args)
 }
 
-fn get_path(arg: &mut Vec<String>) -> Result<String, Error> {
+fn get_path(arg: &mut Vec<String>) -> Result<String> {
     if let Some(path) = arg.pop() {
         return if Path::new(&path).exists() {
             Ok(path)
         } else {
-            Err(Error::error("Path does not exist!"))
+            Err(anyhow::anyhow!("Path does not exist!"))
         };
     }
-    Err(Error::error("Argument Path does not exist!"))
+    Err(anyhow::anyhow!("Argument Path does not exist!"))
 }
 
-fn args_is_empty(args: &Vec<String>) -> Result<(), Error> {
+fn args_is_empty(args: &Vec<String>) -> Result<()> {
     if args.is_empty() {
-        return Err(Error::error("No arguments provided"));
+        return Err(anyhow::anyhow!("No arguments provided"));
     }
     Ok(())
 }
 
-fn parse_args_to_command(args: Vec<String>) -> Commands {
+fn parse_args_to_command(args: &Vec<String>) -> Commands {
     return match args.first().map(String::as_str) {
         Some("-c") => Commands::GetBytes,
         Some("-l") => Commands::GetLines,
@@ -87,7 +84,7 @@ fn print_command_result(command: &Commands, file: &FileInformation) {
     };
 }
 
-fn get_all_information(path: &str) -> Result<(u64, u32, u32), Error> {
+fn get_all_information(path: &str) -> Result<(u64, u32, u32)> {
     let all_text = fs::read_to_string(path)?;
 
     let count_bytes = fs::metadata(path)?.len();
