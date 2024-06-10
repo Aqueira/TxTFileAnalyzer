@@ -39,13 +39,13 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-fn get_args() -> Result<Vec<String>> {
+fn get_args() -> Result<Vec<String>, anyhow::Error> {
     let args: Vec<String> = args().skip(1).collect();
     args_is_empty(&args)?;
     Ok(args)
 }
 
-fn get_path(arg: &mut Vec<String>) -> Result<String> {
+fn get_path(arg: &mut Vec<String>) -> Result<String, anyhow::Error> {
     if let Some(path) = arg.pop() {
         return if Path::new(&path).exists() {
             Ok(path)
@@ -56,7 +56,7 @@ fn get_path(arg: &mut Vec<String>) -> Result<String> {
     Err(anyhow::anyhow!("Argument Path does not exist!"))
 }
 
-fn args_is_empty(args: &Vec<String>) -> Result<()> {
+fn args_is_empty(args: &Vec<String>) -> Result<(), anyhow::Error> {
     if args.is_empty() {
         return Err(anyhow::anyhow!("No arguments provided"));
     }
@@ -84,7 +84,7 @@ fn print_command_result(command: &Commands, file: &FileInformation) {
     };
 }
 
-fn get_all_information(path: &str) -> Result<(u64, u32, u32)> {
+fn get_all_information(path: &str) -> Result<(u64, u32, u32), anyhow::Error> {
     let all_text = fs::read_to_string(path)?;
 
     let count_bytes = fs::metadata(path)?.len();
