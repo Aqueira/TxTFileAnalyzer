@@ -3,6 +3,8 @@ use log::{error, info};
 use std::env::args;
 use std::fs;
 use std::path::Path;
+
+
 struct FileInformation {
     bytes: u64,
     lines: u32,
